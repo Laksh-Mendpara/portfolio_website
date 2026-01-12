@@ -1,0 +1,571 @@
+/* ====================================
+   CHAOS PORTFOLIO
+   BREAKING ALL THE RULES
+   ==================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --color-bg: #0a0a0a;
+  --color-white: #ffffff;
+  --color-red: #ff0040;
+  --color-cyan: #00ffff;
+  --color-yellow: #ffff00;
+  --color-green: #00ff00;
+  --color-purple: #ff00ff;
+  
+  --font-mono: 'Space Mono', 'Courier New', monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-mono);
+  background: var(--color-bg);
+  color: var(--color-white);
+  min-height: 100vh;
+}
+
+/* ====================================
+   APP
+   ==================================== */
+.app {
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.app.mounted {
+  opacity: 1;
+}
+
+/* Glitch Effect */
+.app.glitch-active {
+  animation: app-glitch 0.15s steps(2);
+}
+
+@keyframes app-glitch {
+  0% { transform: translate(0); filter: hue-rotate(0deg); }
+  25% { transform: translate(-5px, 3px); filter: hue-rotate(90deg); }
+  50% { transform: translate(5px, -3px); filter: hue-rotate(180deg); }
+  75% { transform: translate(-3px, -5px); filter: hue-rotate(270deg); }
+  100% { transform: translate(0); filter: hue-rotate(360deg); }
+}
+
+/* ====================================
+   CHAOS BACKGROUND
+   ==================================== */
+.chaos-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.broken-piece {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: var(--size);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: float-chaos 10s var(--delay) infinite ease-in-out;
+}
+
+.broken-piece:nth-child(3n) { border-color: rgba(255, 0, 64, 0.2); }
+.broken-piece:nth-child(5n) { border-color: rgba(0, 255, 255, 0.2); }
+.broken-piece:nth-child(7n) { border-color: rgba(255, 0, 255, 0.2); }
+
+@keyframes float-chaos {
+  0%, 100% { 
+    transform: rotate(var(--rotation)) translate(0, 0); 
+    opacity: 0.3;
+  }
+  25% { 
+    transform: rotate(calc(var(--rotation) + 45deg)) translate(20px, -30px);
+    opacity: 0.5;
+  }
+  50% { 
+    transform: rotate(calc(var(--rotation) + 90deg)) translate(-10px, 40px);
+    opacity: 0.2;
+  }
+  75% { 
+    transform: rotate(calc(var(--rotation) + 135deg)) translate(30px, 10px);
+    opacity: 0.4;
+  }
+}
+
+.static-noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  animation: noise-shift 0.5s steps(10) infinite;
+}
+
+@keyframes noise-shift {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-10%, -10%); }
+}
+
+.scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to bottom, transparent, rgba(0, 255, 255, 0.1), transparent);
+  animation: scan 4s linear infinite;
+}
+
+@keyframes scan {
+  0% { top: -4px; }
+  100% { top: 100%; }
+}
+
+/* ====================================
+   GLITCH OVERLAY
+   ==================================== */
+.glitch-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.glitch-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-cyan);
+  opacity: 0;
+  animation: glitch-bar 5s infinite;
+}
+
+.glitch-bar:nth-child(1) { animation-delay: 0s; }
+.glitch-bar:nth-child(2) { animation-delay: 1.5s; }
+.glitch-bar:nth-child(3) { animation-delay: 3s; }
+
+@keyframes glitch-bar {
+  0%, 90%, 100% { opacity: 0; top: 0; }
+  92% { opacity: 1; top: 20%; }
+  94% { opacity: 0; top: 40%; }
+  96% { opacity: 1; top: 60%; }
+  98% { opacity: 0; top: 80%; }
+}
+
+/* ====================================
+   CONTENT
+   ==================================== */
+.content {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Warning Banner */
+.warning-banner {
+  background: var(--color-yellow);
+  color: var(--color-bg);
+  padding: 0.5rem 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.warning-icon {
+  padding: 0 1rem;
+  font-size: 1.25rem;
+  animation: warning-pulse 0.5s infinite;
+}
+
+@keyframes warning-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.warning-scroll {
+  white-space: nowrap;
+  animation: scroll 15s linear infinite;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ====================================
+   HERO
+   ==================================== */
+.hero {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+}
+
+.hero-inner {
+  text-align: center;
+}
+
+/* Broken Title */
+.broken-title {
+  font-size: clamp(4rem, 20vw, 12rem);
+  font-weight: 700;
+  line-height: 0.9;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.title-piece {
+  display: inline-block;
+  position: relative;
+}
+
+.piece-1 {
+  color: var(--color-white);
+  animation: piece-float-1 4s infinite ease-in-out;
+}
+
+.piece-2 {
+  color: var(--color-cyan);
+  animation: piece-float-2 4s infinite ease-in-out;
+  transform: translateY(10px) rotate(5deg);
+}
+
+.piece-3 {
+  color: var(--color-red);
+  animation: piece-float-3 4s infinite ease-in-out;
+  transform: translateY(-15px) rotate(-3deg);
+}
+
+.piece-4 {
+  color: var(--color-yellow);
+  animation: piece-float-4 4s infinite ease-in-out;
+  transform: translateY(5px);
+}
+
+@keyframes piece-float-1 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-5px, 10px) rotate(-2deg); }
+}
+
+@keyframes piece-float-2 {
+  0%, 100% { transform: translate(0, 10px) rotate(5deg); }
+  50% { transform: translate(10px, -5px) rotate(8deg); }
+}
+
+@keyframes piece-float-3 {
+  0%, 100% { transform: translate(0, -15px) rotate(-3deg); }
+  50% { transform: translate(-8px, 5px) rotate(-6deg); }
+}
+
+@keyframes piece-float-4 {
+  0%, 100% { transform: translate(0, 5px) rotate(0deg); }
+  50% { transform: translate(12px, -8px) rotate(4deg); }
+}
+
+/* Status Block */
+.status-block {
+  margin-bottom: 2rem;
+}
+
+.status-line {
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+.blink {
+  animation: blink 1s steps(1) infinite;
+  color: var(--color-green);
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.status-text {
+  color: var(--color-cyan);
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.progress-bar {
+  width: 200px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-red), var(--color-yellow), var(--color-green));
+  animation: progress-fill 3s ease-out forwards, progress-glitch 0.3s 3s infinite;
+}
+
+@keyframes progress-fill {
+  to { width: 73%; }
+}
+
+@keyframes progress-glitch {
+  0%, 90%, 100% { transform: translateX(0); }
+  92%, 96% { transform: translateX(5px); }
+  94%, 98% { transform: translateX(-5px); }
+}
+
+.progress-glitch {
+  position: absolute;
+  inset: 0;
+  background: var(--color-cyan);
+  opacity: 0;
+  animation: bar-flash 4s infinite;
+}
+
+@keyframes bar-flash {
+  0%, 95%, 100% { opacity: 0; }
+  96%, 98% { opacity: 0.8; }
+}
+
+.progress-text {
+  font-size: 0.875rem;
+  color: var(--color-red);
+  animation: text-glitch 2s infinite;
+}
+
+@keyframes text-glitch {
+  0%, 90%, 100% { opacity: 1; }
+  92%, 96% { opacity: 0; }
+}
+
+/* ASCII Art */
+.ascii-art {
+  font-size: clamp(0.5rem, 1.5vw, 0.875rem);
+  line-height: 1.4;
+  color: var(--color-green);
+  text-shadow: 0 0 10px var(--color-green);
+  margin-bottom: 2rem;
+  animation: ascii-flicker 0.1s infinite;
+}
+
+@keyframes ascii-flicker {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 1; }
+}
+
+/* Scattered Links */
+.scattered-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.scatter-link {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 2px solid var(--color-white);
+  color: var(--color-white);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  position: relative;
+  transition: all 0.2s;
+  animation: link-chaos 3s calc(var(--index) * 0.5s) infinite ease-in-out;
+}
+
+.scatter-link:nth-child(1) { border-color: var(--color-cyan); color: var(--color-cyan); }
+.scatter-link:nth-child(2) { border-color: var(--color-red); color: var(--color-red); }
+.scatter-link:nth-child(3) { border-color: var(--color-yellow); color: var(--color-yellow); }
+
+@keyframes link-chaos {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(5px, -3px) rotate(2deg); }
+  50% { transform: translate(-3px, 5px) rotate(-1deg); }
+  75% { transform: translate(3px, 3px) rotate(1deg); }
+}
+
+.scatter-link:hover {
+  background: var(--color-white);
+  color: var(--color-bg) !important;
+  transform: scale(1.1) rotate(0deg) !important;
+  box-shadow: 0 0 30px currentColor;
+}
+
+.link-bracket {
+  opacity: 0.5;
+}
+
+/* ====================================
+   BOTTOM CHAOS
+   ==================================== */
+.bottom-chaos {
+  position: relative;
+  padding: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.code-rain {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-around;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.code-column {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  color: var(--color-green);
+  animation: rain-fall 10s calc(var(--col) * 0.3s) infinite linear;
+}
+
+@keyframes rain-fall {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100%); }
+}
+
+.error-messages {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  justify-content: center;
+}
+
+.error {
+  font-size: 0.75rem;
+  color: var(--color-red);
+  animation: error-blink 0.5s steps(1) infinite;
+}
+
+.error.warning { 
+  color: var(--color-yellow); 
+  animation-delay: 0.2s;
+}
+
+.error.success { 
+  color: var(--color-green);
+  animation-delay: 0.4s;
+}
+
+@keyframes error-blink {
+  0%, 70% { opacity: 1; }
+  71%, 100% { opacity: 0.3; }
+}
+
+/* ====================================
+   FOOTER
+   ==================================== */
+.chaos-footer {
+  padding: 2rem;
+  text-align: center;
+  border-top: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.footer-glitch {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  position: relative;
+  display: inline-block;
+}
+
+.footer-glitch::before,
+.footer-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.footer-glitch::before {
+  color: var(--color-cyan);
+  animation: footer-glitch-1 3s infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+}
+
+.footer-glitch::after {
+  color: var(--color-red);
+  animation: footer-glitch-2 3s infinite;
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+}
+
+@keyframes footer-glitch-1 {
+  0%, 90%, 100% { transform: translate(0); }
+  92%, 96% { transform: translate(-3px, 0); }
+}
+
+@keyframes footer-glitch-2 {
+  0%, 90%, 100% { transform: translate(0); }
+  93%, 97% { transform: translate(3px, 0); }
+}
+
+/* ====================================
+   RESPONSIVE
+   ==================================== */
+@media (max-width: 768px) {
+  .broken-title {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .ascii-art {
+    font-size: 0.45rem;
+  }
+  
+  .scattered-links {
+    gap: 1rem;
+  }
+  
+  .scatter-link {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+  
+  .error-messages {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
